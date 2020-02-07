@@ -2,11 +2,17 @@
 # -*- coding: utf-8 -*-
 import tensorflow as tf
 
-# ESTO SOLO VALE PARA UN INPUT DONDE EL ULTIMO ELEMENTO SEA LA CLASE A PREDECIR
-# El fichero contiene una primera linea con el nombre de las clases
-# Luego 10 datos con 4 variables cada uno separado por |
-
-class Preprocessor:
+# Este tipo de preprocesador unicamente obtiene los datos, NO aplica ningún tipo de normalización y optimiza el formato para entrenar modelos
+# Tipo de input:
+#   - Primera linea con el nombre de las variables separadas por ','
+#   - 'i' lineas con 'j' variables separadas por @delimiter
+# Tipo de output:
+#   - Tupla de cuatro elementos dónde:
+#       - @train_vectors: Tensor con los datos de entrenamiento
+#       - @train_labels: Tensor con las clases a predecir de entrenamiento
+#       - @test_vectors: Tensor con los datos de evaluación
+#       - @test_labels: Tensor con las clases a predecir de evaluación
+class PreprocessorSimple:
     input_data = []                                         # Array bidimensional o lista de arrays que contendra los datos obtenidos del fichero de entrada
     num_class = -1                                          # Entero que indica el número de diferentes clases a predecir
     delimiter = '|'                                         # Elemento delimitador para separar cada dato del fichero de entrada
@@ -16,6 +22,8 @@ class Preprocessor:
 
     def __init__(self, path : str, test_percentage : float):
         try:
+            if test_percentage < 0.1 or test_percentage > 0.9:
+                raise ValueError
             self.test_percentage = test_percentage          
             file = open(path)
             line = file.readline().split(',')
@@ -52,7 +60,7 @@ class Preprocessor:
             test_labels.append(test_label)                      # Añadimos la clase a predecir de evaluación
 
         # Devolvemos una tupla de cuatro tensores donde cada tensor ha sido transformado en uno concatenando sus elementos en el eje 0
-        return (tf.concat(train_vector, 0), tf.concat(train_labels, 0), tf.concat(test_vectors, 0), tf.concat(test_labels, 0))
+        return (tf.concat(train_vectors, 0), tf.concat(train_labels, 0), tf.concat(test_vectors, 0), tf.concat(test_labels, 0))
 
 
     # Convierte la data en tensores y los separa

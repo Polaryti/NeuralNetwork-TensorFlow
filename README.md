@@ -1,2 +1,2 @@
 # TensorFlow-Learning
-Introduction to TensorFlow and Keras machine learning library
+Serie de implementaciones propias para el procesamiento de datos, machine learning y visualización de datos.
