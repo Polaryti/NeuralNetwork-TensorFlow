@@ -8,7 +8,7 @@ from tensorflow import keras
 #   - Dataset donde cada elemento es:
 #       - features: 
 #       - labels:
-class CSVParse:
+class PreprocessorExperimental:
     train_data_path = '' # File path of training data
     test_data_path = '' # File path of test data
     separator = ',' # Character to split the CSV file

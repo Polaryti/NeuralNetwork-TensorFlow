@@ -2,7 +2,7 @@
 # -*- coding: utf-8 -*-
 import tensorflow as tf
 
-# Este tipo de preprocesador unicamente obtiene los datos, NO aplica ningún tipo de normalización y optimiza el formato para entrenar modelos
+# Procesador para el fichero 
 # Tipo de input:
 #   - Primera linea con el nombre de las variables separadas por ','
 #   - 'i' lineas con 'j' variables separadas por @delimiter
@@ -12,13 +12,21 @@ import tensorflow as tf
 #       - @train_labels: Tensor con las clases a predecir de entrenamiento
 #       - @test_vectors: Tensor con los datos de evaluación
 #       - @test_labels: Tensor con las clases a predecir de evaluación
-class PreprocessorSimple:
+class PreprocessorHepa:
     input_data = []                                         # Array bidimensional o lista de arrays que contendra los datos obtenidos del fichero de entrada
     num_class = 2                                           # Entero que indica el número de diferentes clases a predecir
     delimiter = ','                                         # Elemento delimitador para separar cada dato del fichero de entrada
     test_percentage = 0.1                                   # Decimal que representa el porcentaje de muestras para evaluar el modelo [0.1 - 0.9]
     
     variables_name = [] # Atributo extra con el nombre de las variables, a eliminar
+    ar_dict = {
+        "False": 0,
+        "True": 1,
+        "Male": 0,
+        "Female": 1,
+        "live\n": 0,
+        "die\n": 1
+    }
 
     def __init__(self, path : str, test_percentage : float):
         if test_percentage < 0.1 or test_percentage > 0.9:
@@ -27,7 +35,15 @@ class PreprocessorSimple:
         with open(path, 'r') as file_r:
             self.variables_name = file_r.readline().split(',')
             self.input_data = list(map(lambda x: x.split(self.delimiter), file_r.readlines()))
-            print()
+            input_aux = []
+            for aux in self.input_data:
+                sample = self.__map_data(aux)
+                if sample != []:
+                    input_aux.append(sample)
+            self.input_data = input_aux
+            self.__normalize_data()
+
+                
 
     # Separa los datos por clases y devuevle una lista de 4 arrays con los datos bien
     def get_data(self):
@@ -104,3 +120,63 @@ class PreprocessorSimple:
         )                       
 
         return (train_vector, train_label, test_vector, test_label)
+    
+    def __map_data(self, sample):
+        res = []
+        for aux in sample:
+            if aux == '':
+                return []
+            elif aux in self.ar_dict:
+                res.append(self.ar_dict[aux])
+            else:
+                res.append(aux)
+        return res
+
+    def __normalize_data(self):
+        res = []
+
+        max_age = -1
+        avg_age = 0
+        #bilirubin,alk_phosphate,sgot,albumin,protime
+        max_bil = -1
+        avg_bil = 0
+        max_alk = -1
+        avg_alk = 0
+        max_sgot = -1
+        avg_sgot = 0
+        max_alb = -1
+        avg_alb = 0
+        max_pro = -1
+        avg_pro = 0
+
+        for aux in self.input_data:
+            avg_age = avg_age + float(aux[0])
+            if float(aux[0]) > max_age:
+                max_age = float(aux[0])
+            avg_bil = avg_bil + float(aux[13])
+            if float(aux[13]) > max_bil:
+                max_bil = float(aux[13])
+            avg_alk = avg_alk + float(aux[14])
+            if float(aux[14]) > max_alk:
+                max_alk = float(aux[14])
+            avg_sgot = avg_sgot + float(aux[15])
+            if float(aux[15]) > max_sgot:
+                max_sgot = float(aux[15])
+            avg_alb = avg_alb + float(aux[16])
+            if float(aux[16]) > max_alb:
+                max_alb = float(aux[16])
+            avg_pro = avg_pro + float(aux[17])
+            if float(aux[17]) > max_pro:
+                max_pro = float(aux[17])
+
+        for aux in self.input_data:
+            aux[0] = round(float(aux[0]) / max_age, 4)
+            aux[13] = round(float(aux[13]) / max_bil, 4)
+            aux[14] = round(float(aux[14]) / max_alk, 4)
+            aux[15] = round(float(aux[15]) / max_sgot, 4)
+            aux[16] = round(float(aux[16]) / max_alb, 4)
+            aux[17] = round(float(aux[17]) / max_pro, 4)
+            res.append(aux)
+
+        self.input_data = res
+        

@@ -8,3 +8,4 @@ tf.enable_eager_execution() # Modo en el cual no se crea un grafo computacional 
 # Tipo de output:
 #   - 
 class PreprocessorMultiFeature:
+    print('hello')
