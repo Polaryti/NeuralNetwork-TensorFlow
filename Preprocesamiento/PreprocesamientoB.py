@@ -1,6 +1,13 @@
 import tensorflow as tf
 from tensorflow import keras
 
+# *Preprocesador en desarrolor*
+# Tipo de input:
+#   
+# Tipo de output:
+#   - Dataset donde cada elemento es:
+#       - features: 
+#       - labels:
 class CSVParse:
     train_data_path = '' # File path of training data
     test_data_path = '' # File path of test data
