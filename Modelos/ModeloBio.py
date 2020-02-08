@@ -30,16 +30,12 @@ model.fit(
     x = samples_data, 
     y = samples_labels, 
     epochs = 20,
-    validation_split = 0.1
+    validation_split = procesador.test_percentage
     )
 
 # *WIP* 5: Hacer predicciones, evaluar el modelo y visualización de los resultados
 predictions = model.predict(samples_data) # Devuelve la última capa, en este caso un vector con la posibilidad de pertenecer a cada clase
-cont = 1
-print(predictions[0])
-print(("Muestra {} ha predicho {} y lo correcto es {}").format(0, np.argmax(predictions[0]), int(samples_labels[0])))
-print(predictions[1])
-print(("Muestra {} ha predicho {} y lo correcto es {}").format(1, np.argmax(predictions[1]), int(samples_labels[1])))
-for pr in predictions:
-    #print(("Muestra {} ha predicho {} y lo correcto es {}").format(cont, np.argmax(pr), int(samples_labels[cont - 1])))
+cont = 0
+for pr in predictions[:20]:
+    print(("Muestra {} ha predicho {} y lo correcto es {}").format(cont, np.argmax(pr), int(samples_labels[cont])))
     cont += 1
