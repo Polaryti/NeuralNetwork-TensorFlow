@@ -33,7 +33,7 @@ class PreprocessorSimple:
     def get_data(self):
         data_by_class = []                                  # Array auxiliar que contendra los datos separados por clase a predecir
         target_by_class = []                                # Array auxiliar que contendra la clase a predecir
-        for n in range(self.num_class):                          # Añadimos a los anteriores arrays tantos arrays como número de clases a predecir
+        for _ in range(self.num_class):                          # Añadimos a los anteriores arrays tantos arrays como número de clases a predecir
             data_by_class.append([])                            # Añadimos un array vacio
             target_by_class.append([])                          # Añadimos un array vacio
         
