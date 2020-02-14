@@ -1,1 +1,0 @@
-# Obtención y procesamiento de datos
