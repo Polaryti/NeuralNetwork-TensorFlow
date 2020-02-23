@@ -11,13 +11,13 @@ procesador = proc.ProcesadorBio("C:\\Users\\mario\\Documents\\GitHub\\TensorFlow
 
 # 2: Creación de la red neuronal
 model = keras.Sequential([
+    keras.layers.Dense(2048, activation='relu'),
+    keras.layers.Dense(1024, activation='relu'),
+    keras.layers.Dense(512, activation='relu'),
+    keras.layers.Dense(256, activation='relu'),
     keras.layers.Dense(128, activation='relu'),
-    keras.layers.Dense(64, activation='tanh'),
-    keras.layers.Dense(32, activation='tanh'),
-    keras.layers.Dense(16, activation='tanh'),
-    keras.layers.Dense(8, activation='tanh'),
-    keras.layers.Dense(4, activation='tanh'),
-    keras.layers.Dense(procesador.num_class, activation='softmax')
+    keras.layers.Dense(64, activation='relu'),
+    keras.layers.Dense(2, activation='softmax')
 ])
 
 # 3: Función de optimización y metrica a optimizar
